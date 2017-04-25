@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
  * 携带pring上下文</br>
  * ApplicationContext初始化时装载Bean(@Component)
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年4月25日
  *
  */

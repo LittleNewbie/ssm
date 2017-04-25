@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationListener;
  * ApplicationContext(Spring上下文)监听</br>
  * ApplicationContext初始化时装载Bean(@Component)
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年4月25日
  *
  */

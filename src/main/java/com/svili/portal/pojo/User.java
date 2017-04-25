@@ -9,13 +9,11 @@ import javax.persistence.Transient;
 
 import org.apache.ibatis.type.Alias;
 
+import com.alibaba.fastjson.JSON;
 import com.svili.portal.type.DataState;
 
 /**
  * 用户信息
- * <p>
- * @Table和Id是必须的
- * </p>
  * 
  * @author svili
  * @date 2016年8月10日
@@ -37,7 +35,7 @@ public class User {
 
 	private String loginName;
 
-	@Column(name="PASSWORD_ALIAS")
+	@Column(name = "PASSWORD_ALIAS")
 	private String password;
 
 	private String mobilePhone;
@@ -191,10 +189,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", deptId=" + deptId + ", userName=" + userName + ", loginName=" + loginName
-				+ ", password=" + password + ", mobilePhone=" + mobilePhone + ", officePhone=" + officePhone
-				+ ", email=" + email + ", job=" + job + ", orderId=" + orderId + ", state=" + state + ", createTime="
-				+ createTime + ", updateTime=" + updateTime + "]";
+		return JSON.toJSONString(this);
 	}
 
 }

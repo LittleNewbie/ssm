@@ -1,5 +1,12 @@
 package com.svili.model;
 
+/**
+ * JSON Response Factory
+ * 
+ * @author svili
+ * @data 2017年4月25日
+ *
+ */
 public class JsonResponseFactory {
 
 	/**

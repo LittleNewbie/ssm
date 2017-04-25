@@ -25,7 +25,7 @@ import org.apache.http.util.EntityUtils;
  * body结束:--boundary--</br>
  * boundary分隔符,避免和上传文本内容重复
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年4月1日
  *
  */

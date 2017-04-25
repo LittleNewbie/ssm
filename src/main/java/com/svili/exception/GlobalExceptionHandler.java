@@ -18,7 +18,7 @@ import com.svili.model.JsonResponseFactory;
 /**
  * SpringMVC异常处理
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年4月20日
  *
  */

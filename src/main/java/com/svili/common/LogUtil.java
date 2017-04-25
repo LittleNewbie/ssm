@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 日志工具类，封装了slf4j的常见用法
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年4月20日
  *
  */

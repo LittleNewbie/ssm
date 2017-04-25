@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * jsonp跨域请求处理
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年4月21日
  *
  */

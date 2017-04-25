@@ -5,7 +5,7 @@ import com.alibaba.fastjson.annotation.JSONType;
 /**
  * SpringMVC response for JSON
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年4月20日
  *
  */

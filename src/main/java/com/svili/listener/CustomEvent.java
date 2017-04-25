@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationEvent;
 /**
  * Application事件
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年4月25日
  *
  */
