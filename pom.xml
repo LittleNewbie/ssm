@@ -184,8 +184,19 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j-version}</version>
 		</dependency>
+		
+		<!-- redis -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.9.0</version>
+		</dependency>
 
-
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>1.8.0.RELEASE</version>
+		</dependency>
 
 	</dependencies>
 	<build>
