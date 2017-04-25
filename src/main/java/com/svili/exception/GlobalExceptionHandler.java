@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
 	 * 日志格式：{method} {uri}
 	 */
 	private void printLog(Exception exception, HttpServletRequest request) {
-		StringBuilder error = new StringBuilder("{} {}");
+		String format = "{} {}";
 
 		List<Object> arguments = new ArrayList<Object>();
 		arguments.add(request.getMethod());
@@ -55,6 +55,6 @@ public class GlobalExceptionHandler {
 			arguments.add(exception);
 		}
 
-		LogUtil.error(error.toString(), arguments.toArray());
+		LogUtil.error(format, arguments.toArray());
 	}
 }
