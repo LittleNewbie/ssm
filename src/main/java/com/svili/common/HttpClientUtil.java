@@ -1,6 +1,7 @@
 package com.svili.common;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
+import com.svili.exception.CustomInnerException;
 
 /**
  * HttpClient工具类</br>
@@ -48,14 +51,14 @@ public class HttpClientUtil {
 	 *            http://www.baidu.com?param_1=value...
 	 * @return response
 	 */
-	public static String sendGet(String uri) throws Exception {
+	public static String sendGet(String uri) {
 		return sendGet(uri, null, null);
 	}
 
 	/**
 	 * httpGet
 	 */
-	public static String sendGet(String url, Map<String, Object> params) throws Exception {
+	public static String sendGet(String url, Map<String, Object> params) {
 		return sendGet(url, params, null);
 	}
 
@@ -69,7 +72,7 @@ public class HttpClientUtil {
 	 * "null".</br>
 	 * 
 	 */
-	public static String sendGet(String url, Map<String, Object> params, Map<String, Object> headers) throws Exception {
+	public static String sendGet(String url, Map<String, Object> params, Map<String, Object> headers) {
 		String uri = url;
 		if (params != null && !params.isEmpty()) {
 			StringBuilder paramURL = new StringBuilder();
@@ -80,7 +83,11 @@ public class HttpClientUtil {
 					paramURL.append("&");
 					paramURL.append(name).append("=");
 					if (value != null) {
-						paramURL.append(URLEncoder.encode(value.toString(), "UTF-8"));
+						try {
+							paramURL.append(URLEncoder.encode(value.toString(), "UTF-8"));
+						} catch (UnsupportedEncodingException e) {
+							throw new CustomInnerException(e);
+						}
 					}
 				}
 			}
@@ -98,11 +105,11 @@ public class HttpClientUtil {
 		return doRequest(httpGet);
 	}
 
-	public static String sendPost(String uri) throws Exception {
+	public static String sendPost(String uri) {
 		return sendPost(uri, null, null);
 	}
 
-	public static String sendPost(String url, Map<String, Object> params) throws Exception {
+	public static String sendPost(String url, Map<String, Object> params) {
 		return sendPost(url, params, null);
 	}
 
@@ -110,16 +117,15 @@ public class HttpClientUtil {
 	 * header.value:if the value is null,it will be cast to String with
 	 * "null".</br>
 	 */
-	public static String sendPost(String url, Map<String, Object> params, Map<String, Object> headers)
-			throws Exception {
+	public static String sendPost(String url, Map<String, Object> params, Map<String, Object> headers) {
 		HttpPost httpPost = new HttpPost(url);
-		if (params != null || !params.isEmpty()) {
+		if (params != null && !params.isEmpty()) {
 			// 创建参数列表
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(params.size());
 			for (Entry<String, Object> entry : params.entrySet()) {
 				String name = entry.getKey();
 				Object value = entry.getValue();
-				if (name != null || !name.equals("")) {
+				if (name != null && !name.equals("")) {
 					if (value != null) {
 						nameValuePairs.add(new BasicNameValuePair(name, value.toString()));
 					} else {
@@ -127,7 +133,11 @@ public class HttpClientUtil {
 					}
 				}
 			}
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+			try {
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				throw new CustomInnerException(e);
+			}
 		}
 
 		if (headers != null && !headers.isEmpty()) {
@@ -139,17 +149,21 @@ public class HttpClientUtil {
 		return doRequest(httpPost);
 	}
 
-	private static String doRequest(HttpUriRequest request) throws Exception {
+	private static String doRequest(HttpUriRequest request) {
 		CloseableHttpClient httpClient = buildHttpClient();
 		CloseableHttpResponse response = null;
 
 		try {
 			response = httpClient.execute(request);
 		} catch (IOException e) {
-			throw e;
+			throw new CustomInnerException(e);
 		} finally {
 			if (httpClient != null) {
-				httpClient.close();
+				try {
+					httpClient.close();
+				} catch (IOException e) {
+					new CustomInnerException(e);
+				}
 			}
 		}
 		// 状态码
@@ -159,10 +173,14 @@ public class HttpClientUtil {
 		try {
 			result = EntityUtils.toString(response.getEntity(), "UTF-8");
 		} catch (ParseException | IOException e) {
-			throw e;
+			throw new CustomInnerException(e);
 		} finally {
 			if (response != null) {
-				response.close();
+				try {
+					response.close();
+				} catch (IOException e) {
+					new CustomInnerException(e);
+				}
 			}
 		}
 

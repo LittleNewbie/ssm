@@ -101,6 +101,59 @@ public class FtpUtil {
 		}
 		return result;
 	}
+	
+	/**
+	 * Description: 从FTP服务器下载文件
+	 * 
+	 * @param host
+	 *            FTP服务器hostname
+	 * @param port
+	 *            FTP服务器端口
+	 * @param username
+	 *            FTP登录账号
+	 * @param password
+	 *            FTP登录密码
+	 * @param remotePath
+	 *            FTP服务器上的相对路径
+	 * @param fileName
+	 *            要下载的文件名
+	 * @return InputStream
+	 */
+	public static InputStream downloadFile(String host, int port, String username, String password, String remotePath,
+			String fileName) {
+		InputStream result = null;
+		FTPClient ftp = new FTPClient();
+		try {
+			int reply;
+			ftp.connect(host, port);
+			// 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
+			ftp.login(username, password);// 登录
+			reply = ftp.getReplyCode();
+			if (!FTPReply.isPositiveCompletion(reply)) {
+				ftp.disconnect();
+				throw new Exception("failed to get ftp connection ");
+			}
+			ftp.changeWorkingDirectory(remotePath);// 转移到FTP服务器目录
+			FTPFile[] fs = ftp.listFiles();
+			for (FTPFile ff : fs) {
+				if (ff.getName().equals(fileName)) {
+					result = ftp.retrieveFileStream(ff.getName());
+				}
+			}
+			ftp.logout();
+		} catch (Exception e) {
+
+		} finally {
+			if (ftp.isConnected()) {
+				try {
+					ftp.disconnect();
+				} catch (IOException ioe) {
+					
+				}
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * Description: 从FTP服务器下载文件

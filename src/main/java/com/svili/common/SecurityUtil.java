@@ -20,7 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 
 import com.svili.exception.CustomAppException;
-import com.svili.exception.CustomSystemException;
+import com.svili.exception.CustomInnerException;
 
 /**
  * 安全工具类。包括加密、解密等各个算法。
@@ -69,7 +69,7 @@ public final class SecurityUtil {
 				generator = KeyPairGenerator.getInstance("RSA");
 				generator.initialize(1024);
 			} catch (NoSuchAlgorithmException e) {
-				throw new CustomSystemException("生成RSA密钥对出错",e);
+				throw new CustomInnerException("生成RSA密钥对出错",e);
 				//LogUtil.error("生成RSA密钥对出错", e);
 			}
 			
@@ -163,7 +163,7 @@ public final class SecurityUtil {
 			// 私钥加密后的字节流，用BASE64再次加密
 			return encryptBASE64(encryptRSA(cipher, toUTF8Bytes(data)));
 		} catch(Exception e) {
-			throw new CustomSystemException("RSA私钥加密明文：" + data, e);
+			throw new CustomInnerException("RSA私钥加密明文：" + data, e);
 		}
 	}
 	
@@ -190,7 +190,7 @@ public final class SecurityUtil {
 			// 使用BASE64先解密，然后用私钥再次解密
 			return toUTF8String(decryptRSA(cipher, decryptBASE64(data)));
 		} catch(Exception e) {
-			throw new CustomSystemException("RSA私钥解密密文：" + data, e);
+			throw new CustomInnerException("RSA私钥解密密文：" + data, e);
 		}
 	}
 	
@@ -217,7 +217,7 @@ public final class SecurityUtil {
 			// 使用公钥加密后，再用BASE64加密
 			return encryptBASE64(encryptRSA(cipher, toUTF8Bytes(data)));
 		} catch(Exception e) {
-			throw new CustomSystemException("RSA公钥加密明文：" + data, e);
+			throw new CustomInnerException("RSA公钥加密明文：" + data, e);
 		}
 	}
 	
@@ -244,7 +244,7 @@ public final class SecurityUtil {
 			// 使用BASE64先解密，然后用公钥再次解密
 			return toUTF8String(decryptRSA(cipher, decryptBASE64(data)));
 		} catch(Exception e) {
-			throw new CustomSystemException("RSA公钥解密密文：" + data, e);
+			throw new CustomInnerException("RSA公钥解密密文：" + data, e);
 		}
 	}
 	
@@ -261,7 +261,7 @@ public final class SecurityUtil {
 	        // 将密钥用BASE64编码
 	        return encryptBASE64(secretKey.getEncoded());
 		} catch (Exception e) {
-			throw new CustomSystemException("生成AES对称秘钥失败", e);
+			throw new CustomInnerException("生成AES对称秘钥失败", e);
 		}
 	}
 	
@@ -285,7 +285,7 @@ public final class SecurityUtil {
 			// 加密后，再用BASE64加密
 			return encryptBASE64(cipher.doFinal(toUTF8Bytes(data)));
 		} catch (Exception e) {
-			throw new CustomSystemException("AES加密明文：" + data, e);
+			throw new CustomInnerException("AES加密明文：" + data, e);
 		}
 	}
 	
@@ -309,7 +309,7 @@ public final class SecurityUtil {
 			// 使用BASE64先解密，然后用对称密钥再次解密
 			return toUTF8String(cipher.doFinal(decryptBASE64(data)));
 		} catch (Exception e) {
-			throw new CustomSystemException("AES解密密文：" + data, e);
+			throw new CustomInnerException("AES解密密文：" + data, e);
 		}
 	}
 	
@@ -357,7 +357,7 @@ public final class SecurityUtil {
 		try {
 			return new String(data, "UTF-8");
 		} catch (Exception e) {
-			throw new CustomSystemException("",e);
+			throw new CustomInnerException("",e);
 		}
 	}
 	
@@ -373,7 +373,7 @@ public final class SecurityUtil {
 			messageDigest.update(toUTF8Bytes(data));
 			return byteToHex(messageDigest.digest());
 		} catch(Exception e) {
-			throw new CustomSystemException("SHA1加密明文：" + data, e);
+			throw new CustomInnerException("SHA1加密明文：" + data, e);
 		}
 	}
 	

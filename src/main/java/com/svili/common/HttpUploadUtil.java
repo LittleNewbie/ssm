@@ -32,10 +32,10 @@ import org.apache.http.util.EntityUtils;
 public class HttpUploadUtil {
 
 	static final String CRLF_STR = "\r\n";
-	static final byte[] CRLF = "\r\n".getBytes();
+	static final byte[] CRLF_BYTES = "\r\n".getBytes();
 
 	static final String BOUNDARY_STR = "--------yktUploadBoundary------";
-	static final byte[] BOUNDARY = "--------yktUploadBoundary------".getBytes();
+	static final byte[] BOUNDARY_BYTES = "--------yktUploadBoundary------".getBytes();
 
 	/**
 	 * 将请求参数转化为http form-body</br>
@@ -59,26 +59,26 @@ public class HttpUploadUtil {
 
 		if (textParams != null && !textParams.isEmpty()) {
 			for (Entry<String, String> entry : textParams.entrySet()) {
-				buffer.put(CRLF).put("--".getBytes()).put(BOUNDARY).put(CRLF);
+				buffer.put(CRLF_BYTES).put("--".getBytes()).put(BOUNDARY_BYTES).put(CRLF_BYTES);
 				buffer.put("Content-Disposition: form-data; name=\"".getBytes()).put(entry.getKey().getBytes())
 						.put("\"".getBytes());
-				buffer.put(CRLF).put(CRLF);
+				buffer.put(CRLF_BYTES).put(CRLF_BYTES);
 				buffer.put(entry.getValue().getBytes());
 			}
 		}
 
 		if (file != null) {
-			buffer.put(CRLF).put("--".getBytes()).put(BOUNDARY).put(CRLF);
+			buffer.put(CRLF_BYTES).put("--".getBytes()).put(BOUNDARY_BYTES).put(CRLF_BYTES);
 			buffer.put("Content-Disposition: form-data; name=\"file\";filename=\"".getBytes()).put(fileName.getBytes())
 					.put("\"".getBytes());
-			buffer.put(CRLF);
+			buffer.put(CRLF_BYTES);
 			buffer.put("Content-Type: application/octet-stream".getBytes());
-			buffer.put(CRLF).put(CRLF);
+			buffer.put(CRLF_BYTES).put(CRLF_BYTES);
 			buffer.put(file);
 		}
 
 		// end body
-		buffer.put(CRLF).put("--".getBytes()).put(BOUNDARY).put("--".getBytes()).put(CRLF);
+		buffer.put(CRLF_BYTES).put("--".getBytes()).put(BOUNDARY_BYTES).put("--".getBytes()).put(CRLF_BYTES);
 		return buffer.array();
 	}
 
