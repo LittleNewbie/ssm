@@ -23,7 +23,7 @@ import com.svili.model.JsonResponseFactory;
  *
  */
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class ControllerExceptionHandler {
 
 	@ExceptionHandler(value = Exception.class)
 	@ResponseStatus(HttpStatus.OK)

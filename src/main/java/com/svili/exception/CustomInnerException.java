@@ -7,19 +7,19 @@ package com.svili.exception;
  * @data 2017年4月25日
  *
  */
-public class CustomSystemException extends java.lang.RuntimeException {
+public class CustomInnerException extends java.lang.RuntimeException {
 
 	private static final long serialVersionUID = 9030107012846801196L;
 
-	public CustomSystemException(String message) {
+	public CustomInnerException(String message) {
 		super(message);
 	}
 
-	public CustomSystemException(Throwable cause) {
+	public CustomInnerException(Throwable cause) {
 		super(cause);
 	}
 
-	public CustomSystemException(String message, Throwable cause) {
+	public CustomInnerException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
