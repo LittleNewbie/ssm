@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.svili.common.LogUtil;
-import com.svili.model.JsonResponse;
-import com.svili.model.JsonResponseFactory;
+import com.svili.model.vo.JsonResponse;
+import com.svili.model.vo.JsonResponseFactory;
 
 /**
  * SpringMVC异常处理

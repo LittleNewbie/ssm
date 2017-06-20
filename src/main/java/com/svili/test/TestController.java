@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.svili.model.JsonResponse;
-import com.svili.portal.pojo.User;
-import com.svili.portal.type.DataState;
+import com.svili.model.po.User;
+import com.svili.model.type.DataState;
+import com.svili.model.vo.JsonResponse;
 
 @Controller
 public class TestController {
@@ -20,7 +20,6 @@ public class TestController {
 		User user = new User();
 		user.setDeptId(1);
 		user.setCreateTime(new Date());
-		user.setState(DataState.EFFECT);
 		return new JsonResponse(user);
 	}
 	

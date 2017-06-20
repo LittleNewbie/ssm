@@ -1,4 +1,4 @@
-package com.svili.model;
+package com.svili.model.vo;
 
 import com.alibaba.fastjson.annotation.JSONType;
 

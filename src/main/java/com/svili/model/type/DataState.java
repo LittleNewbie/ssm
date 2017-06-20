@@ -1,4 +1,4 @@
-package com.svili.portal.type;
+package com.svili.model.type;
 
 /**
  * 数据有效性

@@ -1,4 +1,4 @@
-package com.svili.model;
+package com.svili.model.vo;
 
 /**
  * JSON Response Factory
