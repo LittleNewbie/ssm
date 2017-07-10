@@ -51,6 +51,17 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+	<!-- Spring MVC put表单 -->
+	<!-- html form: method="put" enctype="application/x-www-form-urlencoded" -->
+	<filter>
+		<filter-name>httpPutFormcontentFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>httpPutFormcontentFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<!-- spring mvc配置 -->
 	<!-- spring MVC的核心就是DispatcherServlet，使用springMVC的第一步就是将下面的servlet放入web.xml -->
 	<!-- servlet-name属性非常重要，默认情况下，DispatchServlet会加载WEN-INF目录下,[servlet-name]-servlet.xml的文件 -->
@@ -94,7 +105,7 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	
+
 	<!-- Spring web请求监听器 -->
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
@@ -104,6 +115,8 @@
 	<listener>
 		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
+
+
 
 	<!-- 业务层， 持久层的bean放在父容器中applicationContext.xml， 这样可以被所有展现层共享； -->
 	<!-- springContext(spring上下文) -->

@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.svili.common.LogUtil;
-import com.svili.model.vo.JsonResponse;
-import com.svili.model.vo.JsonResponseFactory;
+import com.svili.model.vo.JsonModel;
 
 /**
  * SpringMVC异常处理
@@ -28,13 +27,13 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(value = Exception.class)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public JsonResponse handleException(Exception exception, HttpServletRequest request) {
+	public JsonModel handleException(Exception exception, HttpServletRequest request) {
 
 		// 打印异常日志
 		printLog(exception, request);
 
-		// 返回异常响应
-		return JsonResponseFactory.createErroResponse("0001", "system erro");
+		// 返回异常信息
+		return JsonModel.erro("0001", "system erro");
 	}
 
 	/**

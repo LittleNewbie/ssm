@@ -4,14 +4,19 @@ import org.apache.log4j.Logger;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-@RunWith(JUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:configs/spring.xml", "classpath:configs/mybatis-config.xml" })
-//@Transactional
-//@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class SsmTest {
 
-	private static Logger logger = Logger.getLogger(SsmTest.class);
-
+	public static void main(String[] args) {
+		int[] array = { 1, 2 };
+		Exception ex = new Exception();
+		try {
+			System.out.println(array[3]);
+		} catch (Exception e) {
+			ex = new Exception("hehhehhe");
+			
+			e.printStackTrace();
+		}
+		System.out.println(ex.getMessage());
+	}
 
 }
