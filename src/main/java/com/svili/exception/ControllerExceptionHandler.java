@@ -1,7 +1,6 @@
 package com.svili.exception;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.alibaba.fastjson.JSON;
 import com.svili.common.LogUtil;
 import com.svili.model.vo.JsonModel;
 
@@ -38,22 +38,15 @@ public class ControllerExceptionHandler {
 
 	/**
 	 * 打印异常日志 </br>
-	 * 日志格式：{method} {uri}
+	 * 日志格式：{method} {uri} parameters={parameters}</br>
+	 * e.g. GET /ykt_mobileapi/index args =
 	 */
 	private void printLog(Exception exception, HttpServletRequest request) {
-		String format = "{} {}";
-
-		List<Object> arguments = new ArrayList<Object>();
-		arguments.add(request.getMethod());
-		arguments.add(request.getRequestURI());
-
-		// 打印异常堆栈
-		if (exception.getCause() != null) {
-			arguments.add(exception.getCause());
-		} else {
-			arguments.add(exception);
-		}
-
-		LogUtil.error(format, arguments.toArray());
+		String msg = "{method} {uri} parameters={parameters}";
+		msg = msg.replace("{method}", request.getMethod());
+		msg = msg.replace("{uri}", request.getRequestURI());
+		Map<String, String[]> parameters = request.getParameterMap();
+		msg = msg.replace("{parameters}", JSON.toJSONString(parameters));
+		LogUtil.error(msg, exception);
 	}
 }

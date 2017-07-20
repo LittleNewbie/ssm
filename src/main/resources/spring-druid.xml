@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans.xsd    
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<description>spring druid</description>
+
+	<!-- druid监控统计拦截的filter *start* -->
+	<bean id="statfilter" class="com.alibaba.druid.filter.stat.StatFilter">
+		<!-- 开启合并sql -->
+		<property name="mergeSql" value="true" />
+		<!-- 开启慢查询语句,1秒 -->
+		<property name="slowSqlMillis" value="1000" />
+		<property name="logSlowSql" value="true" />
+	</bean>
+	<!-- druid监控统计拦截的filter *end* -->
+
+	<!-- 数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${oracle.driver}" />
+		<property name="url" value="${oracle.url}" />
+		<property name="username" value="${oracle.username}" />
+		<property name="password" value="${oracle.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${oracle.initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${oracle.maxActive}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="1"></property>
+		<!-- 获取连接等待超时的时间 -->
+		<property name="maxWait" value="${oracle.maxWait}"></property>
+		<property name="validationQuery" value="select 1 from dual" />
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="20" />
+
+		<!-- 配置监控统计拦截的filters -->
+		<property name="filters" value="wall,log4j" />
+		<property name="proxyFilters">
+			<list>
+				<ref bean="statfilter" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+</beans>

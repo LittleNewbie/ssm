@@ -3,6 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans    
                         http://www.springframework.org/schema/beans/spring-beans.xsd    
                         http://www.springframework.org/schema/context    
@@ -10,7 +11,11 @@
                         http://www.springframework.org/schema/aop  
                         http://www.springframework.org/schema/aop/spring-aop.xsd
                         http://www.springframework.org/schema/cache
-                        http://www.springframework.org/schema/cache/spring-cache.xsd">
+                        http://www.springframework.org/schema/cache/spring-cache.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<description>spring root</description>
 
 	<!-- 默认扫描的包路径 -->
 	<context:component-scan base-package="com.svili">
@@ -22,19 +27,24 @@
 	<!-- ASPECTJ注解 proxy-target-class="true" -->
 	<aop:aspectj-autoproxy />
 
+	<!-- 开启注解事务的支持 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
 	<!-- 将多个配置文件读取到容器中，交给Spring管理 -->
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
 				<!-- db -->
-				<value>classpath:configs/db.properties</value>
+				<value>classpath:db.properties</value>
 			</list>
 		</property>
 	</bean>
 
+	<!-- spring druid 配置文件 -->
+	<import resource="spring-druid.xml" />
 
 	<!-- mybatis配置文件 -->
 	<import resource="spring-mybatis.xml" />
-	
+
 </beans>  

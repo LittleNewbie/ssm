@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -17,13 +18,13 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-
-import com.svili.exception.CustomInnerException;
 
 /**
  * HttpClient工具类</br>
@@ -49,17 +50,17 @@ public class HttpClientUtil {
 	 * @param uri
 	 *            for example,http://www.baidu.com or
 	 *            http://www.baidu.com?param_1=value...
-	 * @return response
+	 * @return response content
 	 */
-	public static String sendGet(String uri) {
-		return sendGet(uri, null, null);
+	public static String get(String uri) {
+		return get(uri, null, null);
 	}
 
 	/**
 	 * httpGet
 	 */
-	public static String sendGet(String url, Map<String, Object> params) {
-		return sendGet(url, params, null);
+	public static String get(String url, Map<String, Object> params) {
+		return get(url, params, null);
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class HttpClientUtil {
 	 * "null".</br>
 	 * 
 	 */
-	public static String sendGet(String url, Map<String, Object> params, Map<String, Object> headers) {
+	public static String get(String url, Map<String, Object> params, Map<String, Object> headers) {
 		String uri = url;
 		if (params != null && !params.isEmpty()) {
 			StringBuilder paramURL = new StringBuilder();
@@ -86,7 +87,7 @@ public class HttpClientUtil {
 						try {
 							paramURL.append(URLEncoder.encode(value.toString(), "UTF-8"));
 						} catch (UnsupportedEncodingException e) {
-							throw new CustomInnerException(e);
+							throw new RuntimeException(e);
 						}
 					}
 				}
@@ -105,19 +106,19 @@ public class HttpClientUtil {
 		return doRequest(httpGet);
 	}
 
-	public static String sendPost(String uri) {
-		return sendPost(uri, null, null);
+	public static String post(String uri) {
+		return postForm(uri, null, null);
 	}
 
-	public static String sendPost(String url, Map<String, Object> params) {
-		return sendPost(url, params, null);
+	public static String postForm(String url, Map<String, Object> params) {
+		return postForm(url, params, null);
 	}
 
 	/**
 	 * header.value:if the value is null,it will be cast to String with
 	 * "null".</br>
 	 */
-	public static String sendPost(String url, Map<String, Object> params, Map<String, Object> headers) {
+	public static String postForm(String url, Map<String, Object> params, Map<String, Object> headers) {
 		HttpPost httpPost = new HttpPost(url);
 		if (params != null && !params.isEmpty()) {
 			// 创建参数列表
@@ -136,7 +137,7 @@ public class HttpClientUtil {
 			try {
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
-				throw new CustomInnerException(e);
+				throw new RuntimeException(e);
 			}
 		}
 
@@ -149,37 +150,76 @@ public class HttpClientUtil {
 		return doRequest(httpPost);
 	}
 
+	public static String postBody(String url, String body) {
+		Map<String, Object> headers = new HashMap<String, Object>();
+		headers.put("Content-Type", "application/json");
+		return postBody(url, body, headers);
+	}
+
+	public static String postBody(String url, String body, Map<String, Object> headers) {
+		HttpPost httpPost = new HttpPost(url);
+
+		if (!StringUtils.isEmpty(body)) {
+			httpPost.setEntity(new StringEntity(body, "UTF-8"));
+		}
+
+		if (headers != null && !headers.isEmpty()) {
+			for (Entry<String, Object> entry : headers.entrySet()) {
+				httpPost.addHeader(entry.getKey(), String.valueOf(entry.getValue()));
+			}
+		}
+
+		return doRequest(httpPost);
+	}
+
+	public static String putBody(String url, String body) {
+		Map<String, Object> headers = new HashMap<String, Object>();
+		headers.put("Content-Type", "application/json");
+		return putBody(url, body, headers);
+	}
+
+	public static String putBody(String url, String body, Map<String, Object> headers) {
+		HttpPut httpPut = new HttpPut(url);
+
+		if (!StringUtils.isEmpty(body)) {
+			httpPut.setEntity(new StringEntity(body, "UTF-8"));
+		}
+
+		if (headers != null && !headers.isEmpty()) {
+			for (Entry<String, Object> entry : headers.entrySet()) {
+				httpPut.addHeader(entry.getKey(), String.valueOf(entry.getValue()));
+			}
+		}
+
+		return doRequest(httpPut);
+	}
+
 	private static String doRequest(HttpUriRequest request) {
 		CloseableHttpClient httpClient = buildHttpClient();
 		CloseableHttpResponse response = null;
-
-		try {
-			response = httpClient.execute(request);
-		} catch (IOException e) {
-			throw new CustomInnerException(e);
-		} finally {
-			if (httpClient != null) {
-				try {
-					httpClient.close();
-				} catch (IOException e) {
-					new CustomInnerException(e);
-				}
-			}
-		}
 		// 状态码
 		// int statusCode = response.getStatusLine().getStatusCode();
 		String result = "";
 
 		try {
+			response = httpClient.execute(request);
 			result = EntityUtils.toString(response.getEntity(), "UTF-8");
 		} catch (ParseException | IOException e) {
-			throw new CustomInnerException(e);
+			throw new RuntimeException(e);
 		} finally {
+			if (httpClient != null) {
+				try {
+					httpClient.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+
 			if (response != null) {
 				try {
 					response.close();
 				} catch (IOException e) {
-					new CustomInnerException(e);
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -193,6 +233,7 @@ public class HttpClientUtil {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private static Map<String, String> parseHeader(HttpResponse response) {
 		Header[] headers = response.getAllHeaders();
 
@@ -218,6 +259,7 @@ public class HttpClientUtil {
 	 * @param response
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private static Map<String, String> parseCookie(HttpResponse response) {
 		Header[] cookies = response.getHeaders("Set-Cookie");
 
