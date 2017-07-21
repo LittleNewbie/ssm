@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job-scheduling-data
+	xmlns="http://www.quartz-scheduler.org/xml/JobSchedulingData"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData http://www.quartz-scheduler.org/xml/job_scheduling_data_2_0.xsd"
+	version="2.0">
+
+	<processing-directives>
+		<overwrite-existing-data>true</overwrite-existing-data>
+		<ignore-duplicates>false</ignore-duplicates>
+	</processing-directives>
+	<schedule>
+		<job>
+			<name>simpleJob</name>
+			<description> 简单的Job示例 </description>
+			<job-class>
+				com.svili.quartz.SimpleJobDemo
+			</job-class>
+			<durability>false</durability>
+			<recover>false</recover>
+		</job>
+		<trigger>
+			<cron>
+				<name>simpleJobTrigger</name>
+				<job-name>simpleJob</job-name>
+				<!-- Run the job every 5 seconds -->
+				<cron-expression>0/5 * * ? * *</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+</job-scheduling-data>  

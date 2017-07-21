@@ -44,7 +44,10 @@
 	<!-- spring druid 配置文件 -->
 	<import resource="spring-druid.xml" />
 
-	<!-- mybatis配置文件 -->
+	<!-- mybatis集成文件 -->
 	<import resource="spring-mybatis.xml" />
+
+	<!-- quartz集成文件 -->
+	<import resource="spring-quartz-simple.xml" />
 
 </beans>  

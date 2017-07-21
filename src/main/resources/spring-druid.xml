@@ -44,7 +44,7 @@
 			value="20" />
 
 		<!-- 配置监控统计拦截的filters -->
-		<property name="filters" value="wall,log4j" />
+		<property name="filters" value="log4j" />
 		<property name="proxyFilters">
 			<list>
 				<ref bean="statfilter" />
