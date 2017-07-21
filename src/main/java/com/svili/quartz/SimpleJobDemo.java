@@ -6,7 +6,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.svili.common.DateUtil;
 
@@ -27,7 +26,6 @@ public class SimpleJobDemo extends QuartzJobBean {
 
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(context);
 		String sql = "select 1 from dual ";
 		int num = jdbcTemplate.queryForObject(sql, Number.class).intValue();
 		System.out.println(DateUtil.format() + " : " + num);

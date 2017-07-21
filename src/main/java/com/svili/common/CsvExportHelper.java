@@ -63,8 +63,8 @@ public class CsvExportHelper {
 		// mapWriter
 		ICsvMapWriter csvWriter = new CsvMapWriter(writer, CsvPreference.STANDARD_PREFERENCE);
 
-		List<String> header = new ArrayList<String>();
-		List<String> nameMapping = new ArrayList<String>();
+		List<String> header = new ArrayList<>();
+		List<String> nameMapping = new ArrayList<>();
 		for (Entry<String, String> entry : mapper.entrySet()) {
 			// 字段编码
 			nameMapping.add(entry.getKey());
@@ -118,8 +118,8 @@ public class CsvExportHelper {
 		// beanWriter
 		ICsvBeanWriter csvWriter = new CsvBeanWriter(writer, CsvPreference.STANDARD_PREFERENCE);
 
-		List<String> header = new ArrayList<String>();
-		List<String> nameMapping = new ArrayList<String>();
+		List<String> header = new ArrayList<>();
+		List<String> nameMapping = new ArrayList<>();
 		for (Entry<String, String> entry : mapper.entrySet()) {
 			// 字段编码
 			nameMapping.add(entry.getKey());

@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.ibatis.type.Alias;
-
 import com.alibaba.fastjson.JSON;
 import com.svili.model.type.UserStatusEnum;
 
@@ -19,7 +17,6 @@ import com.svili.model.type.UserStatusEnum;
  * @date 2016年8月10日
  *
  */
-@Alias("User")
 @Table(name = "user")
 public class User {
 
@@ -33,7 +30,7 @@ public class User {
 
 	private String userName;
 
-	private String loginName;
+	private String nickName;
 
 	@Column(name = "PASSWORD_ENCODED")
 	private String password;
@@ -54,9 +51,6 @@ public class User {
 	private java.util.Date createTime;
 
 	private java.util.Date updateTime;
-
-	public User() {
-	}
 
 	public Integer getUserId() {
 		return userId;
@@ -82,12 +76,12 @@ public class User {
 		this.userName = userName;
 	}
 
-	public String getLoginName() {
-		return loginName;
+	public String getNickName() {
+		return nickName;
 	}
 
-	public void setLoginName(String loginName) {
-		this.loginName = loginName;
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 
 	public String getPassword() {
@@ -160,31 +154,6 @@ public class User {
 
 	public void setUpdateTime(java.util.Date updateTime) {
 		this.updateTime = updateTime;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (userId == null) {
-			if (other.userId != null)
-				return false;
-		} else if (!userId.equals(other.userId))
-			return false;
-		return true;
 	}
 
 	@Override
