@@ -17,7 +17,7 @@ import com.svili.model.type.UserStatusEnum;
  * @date 2016年8月10日
  *
  */
-@Table(name = "user")
+@Table(name = "YKT_C_USER")
 public class User {
 
 	@Transient
