@@ -1,14 +1,16 @@
 package com.svili.model.po;
 
+import java.util.Date;
+
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.alibaba.fastjson.JSON;
-import com.svili.model.type.UserStatusEnum;
+import com.svili.model.type.SexEnum;
 
 /**
  * 用户信息
@@ -17,55 +19,65 @@ import com.svili.model.type.UserStatusEnum;
  * @date 2016年8月10日
  *
  */
-@Table(name = "YKT_C_USER")
+@Entity
+@Table(name = "ssm_user")
 public class User {
 
-	@Transient
-	private static final long serialVersionUID = -7788405797990662048L;
-
 	@Id
-	private Integer userId;
+	private String userId;
 
-	private Integer deptId;
-
+	/** 姓名 */
 	private String userName;
 
-	private String nickName;
+	/** 昵称 */
+	private String nickname;
 
-	@Column(name = "PASSWORD_ENCODED")
+	/** 性别 */
+	@Enumerated(EnumType.STRING)
+	private SexEnum sex;
+
+	/** 密码 */
+	@Column(name = "pwd")
 	private String password;
 
+	/** 手机号码 */
 	private String mobilePhone;
 
+	/** 固定电话/办公电话 */
 	private String officePhone;
 
+	/** 电子邮箱 */
 	private String email;
 
-	private String job;
+	/** 身份证 */
+	private String identityCard;
 
-	private Integer orderId;
+	/** 护照 */
+	private String passport;
 
-	@Enumerated(EnumType.ORDINAL)
-	private UserStatusEnum status;
+	/** 微信 */
+	private String wechat;
 
-	private java.util.Date createTime;
+	/** 新浪微博 */
+	private String sinaBlog;
 
-	private java.util.Date updateTime;
+	/** QQ */
+	private String tencent;
 
-	public Integer getUserId() {
+	/** 创建时间 */
+	@Column(name = "gmt_create")
+	private Date createTime;
+
+	/** 更新时间 */
+	@Column(name = "gmt_modify")
+	private Date modifyTime;
+
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public Integer getDeptId() {
-		return deptId;
-	}
-
-	public void setDeptId(Integer deptId) {
-		this.deptId = deptId;
 	}
 
 	public String getUserName() {
@@ -76,12 +88,20 @@ public class User {
 		this.userName = userName;
 	}
 
-	public String getNickName() {
-		return nickName;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public SexEnum getSex() {
+		return sex;
+	}
+
+	public void setSex(SexEnum sex) {
+		this.sex = sex;
 	}
 
 	public String getPassword() {
@@ -116,44 +136,60 @@ public class User {
 		this.email = email;
 	}
 
-	public String getJob() {
-		return job;
+	public String getIdentityCard() {
+		return identityCard;
 	}
 
-	public void setJob(String job) {
-		this.job = job;
+	public void setIdentityCard(String identityCard) {
+		this.identityCard = identityCard;
 	}
 
-	public Integer getOrderId() {
-		return orderId;
+	public String getPassport() {
+		return passport;
 	}
 
-	public void setOrderId(Integer orderId) {
-		this.orderId = orderId;
+	public void setPassport(String passport) {
+		this.passport = passport;
 	}
 
-	public UserStatusEnum getStatus() {
-		return status;
+	public String getWechat() {
+		return wechat;
 	}
 
-	public void setStatus(UserStatusEnum status) {
-		this.status = status;
+	public void setWechat(String wechat) {
+		this.wechat = wechat;
 	}
 
-	public java.util.Date getCreateTime() {
+	public String getSinaBlog() {
+		return sinaBlog;
+	}
+
+	public void setSinaBlog(String sinaBlog) {
+		this.sinaBlog = sinaBlog;
+	}
+
+	public String getTencent() {
+		return tencent;
+	}
+
+	public void setTencent(String tencent) {
+		this.tencent = tencent;
+	}
+
+	public Date getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(java.util.Date createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 
-	public java.util.Date getUpdateTime() {
-		return updateTime;
+	public Date getModifyTime() {
+		return modifyTime;
 	}
 
-	public void setUpdateTime(java.util.Date updateTime) {
-		this.updateTime = updateTime;
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
 	}
 
 	@Override

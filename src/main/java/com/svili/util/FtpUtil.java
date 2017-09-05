@@ -1,4 +1,4 @@
-package com.svili.common;
+package com.svili.util;
 
 import java.io.File;
 import java.io.FileOutputStream;

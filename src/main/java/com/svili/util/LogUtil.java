@@ -1,4 +1,4 @@
-package com.svili.common;
+package com.svili.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -8,12 +8,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Log4jConfigurer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:configs/spring.xml" })
+@ContextConfiguration(locations = { "classpath:spring.xml" })
 public abstract class AbstractTest {
 
 	static {
 		try {
-			Log4jConfigurer.initLogging("classpath:configs/log4j.properties");
+			Log4jConfigurer.initLogging("classpath:log4j.properties");
 		} catch (FileNotFoundException ex) {
 			System.err.println("Cannot Initialize log4j");
 		}

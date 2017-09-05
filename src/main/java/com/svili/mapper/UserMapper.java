@@ -11,10 +11,13 @@ import com.svili.model.po.User;
 public interface UserMapper {
 
 	@StatementDefinition
+	int insert(User entity);
+
+	@StatementDefinition
 	User selectByUserId(String userId);
 
 	@StatementDefinition
-	User selectByNickName(String nickName);
+	User selectByNickname(String nickName);
 
 	@StatementDefinition
 	User selectByMobilePhone(String mobilePhone);

@@ -7,7 +7,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import com.svili.common.DateUtil;
+import com.svili.util.DateUtil;
 
 /***
  * JobDemo</br>

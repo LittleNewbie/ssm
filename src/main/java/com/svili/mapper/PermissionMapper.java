@@ -10,10 +10,10 @@ import com.svili.model.po.Permission;
 @Repository
 public interface PermissionMapper {
 
-	@Select("select p.* from YKT_C_PERMISSION p left join YKT_C_ROLE_PERMISSION rp on p.PERMISSION_ID = up.PERMISSION_ID where ur.ROLE_ID = #{roleId} ")
+	@Select("SELECT p.* FROM ssm_c_permission p INNER JOIN ssm_c_role_permission rp ON p.permission_id = up.permission_id WHERE ur.role_id = #{roleId} ")
 	List<Permission> selectByRoleId(String roleId);
 
-	@Select("select p.* from YKT_C_PERMISSION p left join YKT_C_ROLE_PERMISSION rp on p.PERMISSION_ID = up.PERMISSION_ID "
-			+ "left join YKT_C_USER_ROLE ur on rp.ROLE_ID = ur.ROLE_ID where ur.USER_ID = #{userId} ")
+	@Select("SELECT p.* FROM ssm_c_permission p LEFT JOIN ssm_c_role_permission rp ON p.permission_id = up.permission_id "
+			+ "LEFT JOIN ssm_c_user_role ur ON rp.role_id = ur.role_id WHERE ur.user_id = #{userId} ")
 	List<Permission> selectByUserId(String userId);
 }

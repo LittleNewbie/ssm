@@ -1,4 +1,4 @@
-package com.svili.common;
+package com.svili.util;
 
 /***
  * 地图工具

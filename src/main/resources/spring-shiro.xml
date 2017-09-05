@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/util
+                        http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<description>spring shiro</description>
+
+	<!-- 密码校验 -->
+	<bean id="passwordRealm" class="com.ybg.shiro.PasswordRealm">
+		<property name="authQuery" ref="authQuery" />
+	</bean>
+
+	<!-- 免密 -->
+	<bean id="navigateRealm" class="com.ybg.shiro.NavigateRealm">
+		<property name="authQuery" ref="authQuery" />
+	</bean>
+
+	<!-- 多个realm的认证 -->
+	<bean id="modularRealmAuthenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+		<property name="authenticationStrategy">
+			<!-- 认证策略 -->
+			<bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"></bean>
+		</property>
+	</bean>
+
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="sessionManager" ref="shiroSessionManager" />
+		<property name="authenticator" ref="modularRealmAuthenticator"></property>
+		<property name="realms">
+			<list>
+				<ref bean="passwordRealm" />
+				<ref bean="navigateRealm" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="shiroSessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<!-- session 有效时间/ms -->
+		<property name="globalSessionTimeout" value="1800000" />
+		<property name="sessionIdCookie.httpOnly" value="true" />
+		<!-- dafault:JSESSIONID -->
+		<!-- <property name="sessionIdCookie.name" value="AUTHSSIONID" /> -->
+	</bean>
+
+	<!-- Shiro的Web过滤器 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 权限管理器 -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 登录地址 -->
+		<property name="loginUrl" value="/authrication/login.page" />
+		<!-- 登录后跳转到业务页面 -->
+		<!-- <property name="successUrl" value="/main.jsp" /> -->
+		<!-- 错误页面 -->
+		<!-- <property name="unauthorizedUrl" value="/error.jsp" /> -->
+		<!-- 权限配置 -->
+		<property name="filterChainDefinitions">
+			<value>
+				<!-- anon 匿名用户请求 -->
+				/demo/** = anon
+				/websocket/** = anon
+				/authrication/** = anon
+				/captcha/** = anon
+				/static/**= anon
+				<!-- authc 已登陆的用户请求 -->
+				/** = authc
+			</value>
+		</property>
+	</bean>
+
+	<!-- Shiro生命周期处理器 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+</beans>

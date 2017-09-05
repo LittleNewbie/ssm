@@ -10,7 +10,7 @@ import com.svili.model.po.Role;
 @Repository
 public interface RoleMapper {
 
-	@Select("select r.* from YKT_C_ROLE r left join YKT_C_USER_ROLE ur on r.ROLE_ID = ur.ROLE_ID where ur.USER_ID = #{userId} ")
+	@Select("SELECT r.* FROM ssm_c_role r INNER JOIN ssm_c_user_role ur ON r.role_id = ur.role_id WHERE ur.user_id = #{userId} ")
 	List<Role> selectByUserId(String userId);
 
 }

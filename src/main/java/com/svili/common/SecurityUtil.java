@@ -21,6 +21,7 @@ import org.apache.commons.codec.binary.Base64;
 
 import com.svili.exception.CustomAppException;
 import com.svili.exception.CustomInnerException;
+import com.svili.util.LogUtil;
 
 /**
  * 安全工具类。包括加密、解密等各个算法。
