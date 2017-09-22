@@ -9,7 +9,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
  * HttpClient 工具类.</br>
  * method:GET,POST,PUT,PATCH.
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年8月22日
  *
  */
@@ -35,7 +35,7 @@ public class HttpClientUtils {
 		}
 
 		public static String post(String uri, Map<String, String> headers) {
-			return HttpClientUtils.post("POST", uri, null);
+			return HttpClientUtils.post("POST", uri, headers);
 		}
 
 		public static String postForm(String uri, Map<String, String> formParams) {

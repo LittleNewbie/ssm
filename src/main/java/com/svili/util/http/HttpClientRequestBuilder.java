@@ -22,7 +22,7 @@ import org.apache.http.message.BasicNameValuePair;
  * HttpClient 工具类.</br>
  * build <code>HttpUriRequest</code>.
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年8月7日
  *
  */
@@ -102,8 +102,8 @@ public class HttpClientRequestBuilder {
 			for (Entry<String, String> entry : formParams.entrySet()) {
 				String name = entry.getKey();
 				String value = entry.getValue();
-				if (StringUtils.isBlank(name)) {
-					if (StringUtils.isBlank(value)) {
+				if (!StringUtils.isBlank(name)) {
+					if (!StringUtils.isBlank(value)) {
 						nameValuePairs.add(new BasicNameValuePair(name, value));
 					} else {
 						nameValuePairs.add(new BasicNameValuePair(name, ""));

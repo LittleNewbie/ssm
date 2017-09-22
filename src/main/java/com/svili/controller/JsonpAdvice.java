@@ -18,7 +18,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
  * SpringMVC jsonp 响应体处理.</br>
  * 基于alibaba fastJson.
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年7月19日
  *
  */

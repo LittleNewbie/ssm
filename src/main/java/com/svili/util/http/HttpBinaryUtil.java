@@ -1,21 +1,20 @@
 package com.svili.util.http;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.Map.Entry;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -26,89 +25,101 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.commons.lang3.StringUtils;
 
 /***
- * HTPP工具类</br>
- * 基于{@link java.net.HttpURLConnection}
- * 
- * @author lishiwei
- * @data 2017年7月26日
+ * Http文件上传工具类
+ *
+ * @author svili
+ * @date 2017年9月22日
  *
  */
-public class HttpUtil {
+public class HttpBinaryUtil {
 
 	private static final String CRLF_STR = "\r\n";
 
-	private static final String BOUNDARY_STR = "--------yktUploadBoundary------";
+	private static final String BOUNDARY_STR = "----yktUploadBoundary";
 
-	public static String toBinary(String fileName, InputStream file) {
-		if (StringUtils.isBlank(fileName)) {
-			// 文件名为空,默认填充uuid
-			fileName = UUID.randomUUID().toString();
+	public static class BinaryBuilder {
+
+		private ByteArrayOutputStream binary;
+
+		public BinaryBuilder() {
+			binary = new ByteArrayOutputStream();
 		}
 
-		Map<String, InputStream> files = new HashMap<>();
-		files.put(fileName, file);
-		return toBinary(null, files);
-	}
+		public BinaryBuilder addTextPair(String name, String value) {
+			String str = "--" + BOUNDARY_STR + CRLF_STR;
+			str = str + "Content-Disposition: form-data; name=\"" + name + "\"" + CRLF_STR + CRLF_STR;
+			str = str + value + CRLF_STR;
+			try {
+				binary.write(str.getBytes(Charset.forName("UTF-8")));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return this;
+		}
 
-	public static String toBinary(Map<String, InputStream> files) {
-		return toBinary(null, files);
-	}
-
-	/**
-	 * 将post表单参数转化为http binary</br>
-	 * 
-	 * @param textPairs
-	 *            字符参数 Key-Value Pair
-	 * @param files
-	 *            文件参数 filename,file
-	 * @return binary
-	 * @throws IOException
-	 *             {@link BufferedReader#readLine()}
-	 */
-	public static String toBinary(Map<String, String> textPairs, Map<String, InputStream> files) {
-		StringBuilder binary = new StringBuilder();
-		if (textPairs != null && !textPairs.isEmpty()) {
+		public BinaryBuilder addTextPairs(Map<String, String> textPairs) {
+			if (textPairs == null || textPairs.isEmpty()) {
+				return this;
+			}
 			for (Entry<String, String> entry : textPairs.entrySet()) {
-				binary.append(CRLF_STR).append("--").append(BOUNDARY_STR).append(CRLF_STR);
-				binary.append("Content-Disposition: form-data; name=\"").append(entry.getKey()).append("\"");
-				binary.append(CRLF_STR).append(CRLF_STR);
-				binary.append(entry.getValue());
+				addTextPair(entry.getKey(), entry.getValue());
 			}
+			return this;
 		}
 
-		if (files != null && !files.isEmpty()) {
-			for (Entry<String, InputStream> entry : files.entrySet()) {
-				// fileName
-				binary.append(CRLF_STR).append("--").append(BOUNDARY_STR).append(CRLF_STR);
-				binary.append("Content-Disposition: form-data; name=\"file\";filename=\"").append(entry.getKey())
-						.append("\"");
-				binary.append(CRLF_STR).append("Content-Type: application/octet-stream");
-				binary.append(CRLF_STR).append(CRLF_STR);
-				// file
-				Charset charset = Charset.forName("utf-8");
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(entry.getValue(), charset));
-				// 读行
-				String line = null;
-				try {
-					while ((line = bufferedReader.readLine()) != null) {
-						binary.append(line);
-					}
-				} catch (IOException e) {
-					throw new RuntimeException("read InputStream erro.", e);
-				} finally {
-					try {
-						bufferedReader.close();
-					} catch (IOException e) {
-						throw new RuntimeException("close InputStream erro.", e);
-					}
+		public BinaryBuilder addFile(String name, String fileName, InputStream input) {
+			if (StringUtils.isBlank(name)) {
+				// 表单项为空,默认填充file
+				name = "file";
+			}
+			if (StringUtils.isBlank(fileName)) {
+				// 文件名为空,默认填充uuid
+				fileName = UUID.randomUUID().toString();
+			}
+			String str = "--" + BOUNDARY_STR + CRLF_STR;
+			str = str + "Content-Disposition: form-data; name=\"" + name + "\" ;filename=\"" + fileName + "\""
+					+ CRLF_STR;
+			str = str + resolveFileType(fileName) + CRLF_STR + CRLF_STR;
+			try {
+				binary.write(str.getBytes(Charset.forName("UTF-8")));
+				int offset = 0;
+				while (offset != -1) {
+					byte[] buff = new byte[1024];
+					offset = input.read(buff);
+					binary.write(buff);
 				}
+				binary.write(CRLF_STR.getBytes(Charset.forName("UTF-8")));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
+			return this;
 		}
 
-		// end binary
-		binary.append(("\r\n--" + BOUNDARY_STR + "--\r\n"));
+		private String resolveFileType(String fileName) {
+			// image
+			if (fileName.endsWith(".gif") || fileName.endsWith(".jpeg") || fileName.endsWith(".jpg")
+					|| fileName.endsWith(".png")) {
+				return "Content-Type: image/jpeg";
+			}
+			if (fileName.endsWith(".xlsx") || fileName.endsWith(".docx") || fileName.endsWith(".doc")) {
+				return "Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+			}
+			return "Content-Type: application/octet-stream";
+		}
 
-		return binary.toString();
+		public byte[] toBinary() {
+			try {
+				binary.write(("--" + BOUNDARY_STR + "--").getBytes(Charset.forName("UTF-8")));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return binary.toByteArray();
+		}
+
+		public byte[] build() {
+			return toBinary();
+		}
+
 	}
 
 	/***
@@ -119,10 +130,10 @@ public class HttpUtil {
 	 * @param headers
 	 *            字符参数 Key-Value Pair
 	 * @param binary
-	 *            文件参数
+	 *            二进制报文
 	 * @return response.content
 	 */
-	public static String postBinary(String uri, String binary, Map<String, String> headers) {
+	public static String postBinary(String uri, byte[] binary, Map<String, String> headers) {
 
 		// 创建连接对象
 		HttpURLConnection conn = ConnectionBuilder.openConnection(uri);
@@ -137,8 +148,11 @@ public class HttpUtil {
 		conn.setDoInput(true);
 		conn.setUseCaches(false);
 
+		conn.setRequestProperty("charset", "UTF-8");
+
 		// 设置请求头 header
 		conn.setRequestProperty("connection", "keep-alive");
+		// Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.6)
 		conn.setRequestProperty("user-agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.6)");
 		conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY_STR);
 		if (headers != null && !headers.isEmpty()) {
@@ -147,21 +161,21 @@ public class HttpUtil {
 			}
 		}
 
-		conn.setConnectTimeout(10000);
-		conn.setReadTimeout(10000);
-
-		BufferedWriter bufferedWriter = null;
+		conn.setConnectTimeout(30000);
+		conn.setReadTimeout(30000);
+		OutputStream out = null;
 		try {
-			bufferedWriter = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "utf-8"));
-			bufferedWriter.write(binary);
-			bufferedWriter.flush();
+			out = conn.getOutputStream();
+			out.write(binary);
+			out.flush();
+
 		} catch (IOException e) {
 			throw new RuntimeException("write body erro.", e);
 		} finally {
-			if (bufferedWriter != null) {
+			if (out != null) {
 				try {
 					// 关闭流
-					bufferedWriter.close();
+					out.close();
 				} catch (IOException e) {
 					throw new RuntimeException("close OutputStream erro.", e);
 				}
@@ -174,7 +188,7 @@ public class HttpUtil {
 		// 读取返回的输入流 并设置字符编码
 		BufferedReader bufferedReader = null;
 		try {
-			bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+			bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charset.forName("utf-8")));
 			String line = null;
 			while ((line = bufferedReader.readLine()) != null) {
 				response.append(line);

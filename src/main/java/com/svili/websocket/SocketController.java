@@ -19,14 +19,14 @@ public class SocketController {
 		JSONObject json = JSON.parseObject(jsonText);
 		String principal = json.getString("principal");
 		String type = json.getString("type");
-		String message = json.getString("message");
+		String data = json.getString("data");
 
 		Assert.hasText(principal);
 		Assert.hasText(type);
-		Assert.hasText(message);
+		Assert.hasText(data);
 
 		WebSocketSubject subject = WebSocketSubject.Holder.getSubject(principal);
-		subject.notify(type, message);
+		subject.notify(type, data);
 
 		return JsonModel.success(Boolean.TRUE);
 	}

@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 /***
  * URI构建器
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年8月22日
  *
  */
@@ -31,7 +31,7 @@ public class URIBuilder {
 			for (Entry<String, String> entry : urlParams.entrySet()) {
 				String name = entry.getKey();
 				String value = entry.getValue();
-				if (StringUtils.isEmpty(name) && StringUtils.isEmpty(value)) {
+				if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(value)) {
 					urlParam.append("&");
 					urlParam.append(name).append("=");
 					// there have no use for encode

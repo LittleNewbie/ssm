@@ -3,7 +3,7 @@ package com.svili.exception;
 /***
  * 系统定义的错误代码.
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年7月18日
  *
  */

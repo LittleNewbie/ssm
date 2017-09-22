@@ -4,7 +4,7 @@ package com.svili.exception;
  * 接口服务返回的错误消息.</br>
  * 该类的构造方法被设置为包访问,构建对象请使用{@link ServiceExceptionFactory}.
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年7月18日
  *
  */

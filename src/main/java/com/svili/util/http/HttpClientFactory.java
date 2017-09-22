@@ -20,7 +20,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
  * HttpClient 工具类.</br>
  * build HttpClient.</br>
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年8月7日
  *
  */

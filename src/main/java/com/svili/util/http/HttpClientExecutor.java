@@ -16,7 +16,7 @@ import org.apache.http.util.EntityUtils;
  * httpClient工具类.</br>
  * 执行器
  * 
- * @author lishiwei
+ * @author svili
  * @data 2017年8月22日
  *
  */
